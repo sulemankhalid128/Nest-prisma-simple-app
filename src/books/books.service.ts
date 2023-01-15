@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-// import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -12,7 +11,15 @@ export class BooksService {
   }
 
   findAll() {
-    return this.prisma.books.findMany();
+    return this.prisma.books.findMany({
+      include: {
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
   }
 
   findOne(id: Prisma.BooksWhereUniqueInput) {
@@ -26,7 +33,9 @@ export class BooksService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  remove(where: Prisma.BooksWhereUniqueInput) {
+    return this.prisma.books.delete({
+      where,
+    });
   }
 }
