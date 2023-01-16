@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { BooksService } from './books.service';
-import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
 export class BooksController {
@@ -31,7 +30,10 @@ export class BooksController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateBookDto: Prisma.BooksUpdateInput,
+  ) {
     return this.booksService.update({ id: +id }, updateBookDto);
   }
 
