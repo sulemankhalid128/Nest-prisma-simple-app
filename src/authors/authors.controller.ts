@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { AuthorsService } from './authors.service';
 
@@ -11,8 +11,17 @@ export class AuthorsController {
     return this.authorsService.create(createAuthorDto);
   }
 
+ 
   @Get()
-  findAll() {
-    return this.authorsService.findAll();
+  async getAuthorsWithBooks(
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10,
+  ) {
+    return this.authorsService.fetchAuthorsWithBooks(page, pageSize);
+  }
+
+  @Get('books')
+  async getBooksByAuthor(@Query('authorId') authorId: number) {
+    return this.authorsService.fetchBooksByAuthor(authorId);
   }
 }
